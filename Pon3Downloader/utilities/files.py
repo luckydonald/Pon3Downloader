@@ -66,10 +66,11 @@ def download_file(url, used_cached=True, temp_dir=None, return_mime=False, retur
 	except HTTPError as e:
 		logger.exception("DL: Error in URL '" + url + "'.\n" + str(e))
 		raise
-		return (None, None) if return_mime else None
+		#return (None, None) if return_mime else None
 	except Exception as e:
 		logger.exception("DL: Error in Download '" + url + "'.\n" + str(e))
-		return (None, None) if return_mime else None
+		raise
+		#return (None, None) if return_mime else None
 	mime = magic.from_buffer(image_buffer, mime=True).decode("utf-8")
 	suffix = (mimetypes.guess_extension(mime) if mime else ".unknown") or ".unknown"
 	if return_buffer:
