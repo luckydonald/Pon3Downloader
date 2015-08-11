@@ -147,11 +147,14 @@ if sys.platform == 'darwin':  # Mac OS
 		subprocess.check_call(['open', '-R', '--', folder_path])
 elif sys.platform == 'linux2':  # linux, hopefully has gnome?
 	def open_folder(folder_path):
-		subprocess.check_call(['gnome-open', '--', folder_path])
+		subprocess.check_call(['gnome-open', '--', folder_path])  # untested.
 	def open_file_folder(file_path):
 		open_folder(os.path.dirname(file_path))
 elif sys.platform == 'win32':  # windows
 	def open_folder(folder_path):
 		subprocess.check_call(['explorer', folder_path])
 	def open_file_folder(file_path):
-		open_folder(os.path.dirname(file_path))
+		try:
+			subprocess.check_call(['explorer', '/select,"%s"' % file_path])
+		except:
+			open_folder(os.path.dirname(file_path))
