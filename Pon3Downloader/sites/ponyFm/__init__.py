@@ -33,19 +33,24 @@ def download_song(song_id, requested_type="mp3"):
 	### FILE Download ###
 
 	download_src = None
-	for download_format in json.track.formats:
-		logger.debug("Found {extension} download.".format(extension=download_format.extension))
-		if u(download_format.extension) == requested_type:
-			download_src = download_format.url
-			logger.debug("Got what we need. Skipping rest.")
-			break
-	else:  # not found > try streams
-		if(int(json.track.is_downloadable) != 1):
+	if "formats" in json.track:
+		for download_format in json.track.formats:
+			logger.debug("Found {extension} download.".format(extension=download_format.extension))
+			if u(download_format.extension) == requested_type:
+				download_src = download_format.url
+				logger.debug("Got what we need. Skipping rest.")
+				break
+			#end if
+		#end for
+	#end if
+	if download_src is None:  # not found > try streams
+		if int(json.track.is_downloadable) != 1:
 			logger.warn("Song is marked as 'not downloadable'! The downloaded stream might be bad quality!")
 		else:
 			logger.warn("Did not found the requested download type, searching in the stream formats. They might be bad quality!")
-		for extension,url in json.tracks.streams:
-			logger.debug("Found {extension} stream.".format(extension=download_format.extension))
+		#end if
+		for extension, url in json.track.streams.items():  # for python 2 this should use iteritems() ... but meh.
+			logger.debug("Found {extension} stream.".format(extension=extension))
 			if u(extension) == requested_type:
 				logger.debug("Got what we need. Skipping rest.")
 				download_src = url
@@ -53,6 +58,8 @@ def download_song(song_id, requested_type="mp3"):
 		else:  # neither dl, nor streams > ERROR!
 			logger.error("Did not (at all) found requested type ({requested_type})!".format(requested_type=requested_type))
 			raise AssertionError("Could not find download.")  # TODO: custom DL Exception
+		#end for-else
+	#end if
 	assert(download_src is not None)
 	file_path, file_mime = download_file(download_src, return_mime=True)
 	logger.info("Downloaded mp3 from '{url}' to '{path}'".format(url=download_src, path=file_path))

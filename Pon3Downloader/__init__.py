@@ -31,15 +31,5 @@ def main(argv):
 	else:
 		print("Not valid url.")
 
-
-
-
-
-
-#file = get_metadata(json)
-#print(file)
-
-
-
 if __name__ == "__main__":
 	main(None)
