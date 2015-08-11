@@ -10,7 +10,7 @@ import sys  # launch arguments
 
 from sites.ponyFm import can_load, download_song
 from sites.py_compatibility import input
-from sites.utils import open_file_folder
+from utilities.files import open_file_folder
 
 def main(argv):
 	if argv is None:

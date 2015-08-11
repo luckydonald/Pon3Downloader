@@ -8,7 +8,7 @@ from DictObject.encoding import to_unicode as u
 from DictObject.encoding import to_binary as b
 import eyed3
 import re, os
-from ..utils import download_file, get_json, do_a_filename, guess_extension
+from ...utilities.files import download_file, get_json, do_a_filename, guess_extension
 from ...utilities.tagging import overwrite_if_not
 
 
