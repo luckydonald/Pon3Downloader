@@ -25,7 +25,7 @@ def main(argv):
 
 	song_id = can_load(url)
 	if song_id:
-		file = download_song(song_id)
+		file = download_song(song_id, cover_as_file=True)
 		open_file_folder(file)
 		print(file)
 	else:

@@ -13,14 +13,15 @@ import magic
 import os
 import errno #exist_ok workaround
 from DictObject import DictObject
+from requests.packages.urllib3.exceptions import HTTPError
 
-HEADERS = {'User-Agent': ' Mozilla/5.0 (Macintosh; Intel Mac OS X 6.9; rv:12.3) Gecko/10100101 Firefox/69.0 Pon3Downloader'}
+HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X10.69; rv:4458.42) Gecko/4458 Firefox/69.0 Pon3Downloader'}
 
 
 
 def gettempdir():
 	temp_dir = tempfile.gettempdir()
-	temp_dir = os.path.join(temp_dir, "ponymusicdownloader")
+	temp_dir = os.path.join(temp_dir, "pon3downloader")
 	#py3
 	# os.makedirs(temp_dir, exist_ok=True) #don't raise errors if existent.
 	#py2/3 exist_ok workaround
@@ -104,9 +105,15 @@ def download_file(url, used_cached=True, temp_dir=None, return_mime=False, retur
 	#end if-else
 #end def
 
+
 def get_file_suffix(file_path=None, file_url=None):
 	mime = get_file_mime(file_path=file_path, file_url=file_url)
+	return guess_extension(mime)
+
+
+def guess_extension(mime):
 	return mimetypes.guess_extension(type=mime or "")
+
 
 def get_file_mime(file_path=None, file_url=None):
 		if file_url:

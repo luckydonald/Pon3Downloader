@@ -8,7 +8,7 @@ from DictObject.encoding import to_unicode as u
 from DictObject.encoding import to_binary as b
 import eyed3
 import re, os
-from ..utils import download_file, get_json, do_a_filename
+from ..utils import download_file, get_json, do_a_filename, guess_extension
 class Needed(object):
 	pass
 
@@ -24,7 +24,7 @@ def can_load(url):
 	else:
 		return None
 
-def download_song(song_id, requested_type="mp3"):
+def download_song(song_id, requested_type="mp3", cover_as_file=False):
 	### Prepare/Get Meta ###
 	requested_type = u(requested_type)
 	json = get_json(api_url.format(songid=song_id))
@@ -98,13 +98,21 @@ def download_song(song_id, requested_type="mp3"):
 
 	audiofile.tag.save()
 	logger.debug("wrote file meta.")
-	new_file_name = "{artist} - {title}.{extension}".format(artist=artist,title=json.track.title, extension=extension)
+	new_file_name = "{artist} - {title}".format(artist=artist,title=json.track.title)
 	new_file_name = do_a_filename(new_file_name)
-	logger.info("Renaming to '{filename}'".format(filename= new_file_name))
-	new_file_path = os.path.join(os.path.dirname(file_path), new_file_name)
-	logger.debug("Full new path will be '{path}'.".format(path=new_file_path))
-	os.rename(file_path, new_file_path)
-	return new_file_path
+	music_file_name = new_file_name + "." + extension
+	logger.info("Renaming to '{filename}'".format(filename=music_file_name))
+	file_folder = os.path.dirname(file_path)
+	music_file_path = os.path.join(file_folder, music_file_name)
+	logger.debug("Full new path will be '{path}'.".format(path=music_file_path))
+	os.rename(file_path, music_file_path)
+	if cover_as_file:
+		logger.debug("Trying also writing the cover file.")
+		cover_file_name = new_file_name + guess_extension(imageMine)
+		cover_file_path = os.path.join(file_folder, cover_file_name)
+		with open(cover_file_path, mode="wb+") as cover_file:
+			cover_file.write(imageData)
+	return music_file_path
 
 
 
