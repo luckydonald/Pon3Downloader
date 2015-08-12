@@ -11,6 +11,7 @@ import eyed3
 import os
 from Pon3Downloader.utilities.files import download_file, get_json, do_a_filename, guess_extension
 from Pon3Downloader.utilities.tagging import overwrite_if_not
+from Pon3Downloader.utilities.store import Store
 from Pon3Downloader.utilities import Plugin
 
 import re
@@ -155,10 +156,11 @@ class PonyFM(Plugin):
 					logger.info("Song already is favorite.")
 			return music_file_path
 
-	def __init__(self, username=None, password=None):
+	def __init__(self, username=None, password=None, key=None):
 		self.username = username
 		self.__password = password
-		if self.username is not None and self.__password is not None:
+		self.__key = key
+		if self.username and self.__password:
 			self.login()
 			self.get_token()
 		self.session = None
@@ -167,12 +169,13 @@ class PonyFM(Plugin):
 
 
 
-	def set_credentials(self, username, password):
+	def set_credentials(self, username, password, key):
 		self.username = username
 		self.__password = password
+		self.__key = key
 
 	def login(self):
-		if self.username is None or self.__password is None:
+		if not self.username or not self.__password or not self.__key:
 			raise AssertionError("Please set username/password with `.set_credentials(user, pass)` first.")
 		session = requests.Session()
 		poniverse_ponyfm_url="https://poniverse.net/oauth/authorize?%2Foauth%2Fauthorize&client_id=3&redirect_uri=https%3A%2F%2Fpony.fm%2Fauth%2Foauth&response_type=code&state=login"
@@ -185,7 +188,7 @@ class PonyFM(Plugin):
 		token = BeautifulSoup(r.text).findAll(attrs={'name' : '_token'})[0].get('value').encode()
 		payload = {'_token' : token,
 				   'username' : self.username,
-				   'password' : self.__password,
+				   'password' : Store(self.__key).decrypt(self.__password),
 				   'checkbox' : '1',
 				   'submit' : '',
 				   }
@@ -194,6 +197,14 @@ class PonyFM(Plugin):
 		if r.url == pony_fm_url: # XXX
 			logger.info("Logged in")
 		else:
+			from ...utilities.interactions import confirm
+			if confirm("Login failed. Reset password?", default=True):
+				from ...utilities.store import settings
+				settings.ponyfm_user = ""
+				settings.ponyfm_pass = ""
+				settings.save_settings()
+				import sys
+				sys.exit(77)
 			raise AssertionError("login failed")
 		self.session = session
 		return session
