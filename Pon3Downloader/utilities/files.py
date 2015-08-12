@@ -34,14 +34,16 @@ def gettempdir():
 	return temp_dir
 
 
-def get_json(url, objectify=True):
-	json = requests.get(url, headers=HEADERS, verify=False).json()
+def get_json(url, objectify=True, **kwargs):
+	kwargs.setdefault("headers", HEADERS)
+	kwargs.setdefault("verify", False)
+	json = requests.get(url, **kwargs).json()
 	if objectify:
 		return DictObject.objectify(json)
 	return json
 
 
-def download_file(url, used_cached=True, temp_dir=None, return_mime=False, return_buffer=False):
+def download_file(url, used_cached=True, temp_dir=None, return_mime=False, return_buffer=False, **requests_kwargs):
 	"""
 
 	:param url:
@@ -52,6 +54,8 @@ def download_file(url, used_cached=True, temp_dir=None, return_mime=False, retur
 	:type  return_buffer: bool
 	:return:
 	"""
+	requests_kwargs.setdefault("headers", HEADERS)
+	requests_kwargs.setdefault("verify", False)
 	if not return_buffer:
 		if not temp_dir:
 			temp_dir = gettempdir()
@@ -59,10 +63,7 @@ def download_file(url, used_cached=True, temp_dir=None, return_mime=False, retur
 	#end if not return_buffer
 	try:
 		logger.debug("DL: Downloading from '{url}'.".format(url=url))
-		#image_buffer = urlopen(url).read()
-		image_buffer = requests.get(url, headers=HEADERS, verify=False).content
-
-
+		image_buffer = requests.get(url, **requests_kwargs).content
 	except HTTPError as e:
 		logger.exception("DL: Error in URL '" + url + "'.\n" + str(e))
 		raise
