@@ -227,8 +227,11 @@ class PonyFM(Plugin):
 
 
 
+
 def tests():
 	# TODO: Tests.
 	# "https://pony.fm/tracks/2795-vinylz-eq-paradise" -> steam only
 	# "https://pony.fm/tracks/2794-applejack-too-soon" -> mp3 DL
+
+	# "https://pony.fm/api/web/comments/track/2802": POST {"content":"Finally something so refreshingly different, but still Rainbow factory. Even if I really dislike Rainbow Factory (hate, even?), this song made it to my music collection on my hard drive. Awesome song!","_token":"3kYFkvHSVHHQTCnoZ1XtfITRVUO7eFvt7Bb4ouxT"}
 	pass

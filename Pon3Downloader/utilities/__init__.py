@@ -3,7 +3,7 @@ __author__ = 'luckydonald'
 
 from .files import open_file_folder
 
-def do_complete_load(plugin, url, cover_as_file=True):
+def do_complete_load_if_matches(plugin, url, cover_as_file=True):
 	song_id = plugin.can_load(url)
 	if song_id:
 		file = plugin.download_song(song_id, cover_as_file=cover_as_file)
