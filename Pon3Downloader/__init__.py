@@ -11,7 +11,11 @@ import sys  # launch arguments
 from sites.ponyFm import PonyFM
 from sites.py_compatibility import input
 from utilities.files import open_file_folder
-import secret_logins
+from utilities import do_complete_load
+try:
+	import secret_logins  # a file called secret_logins.py containing the password:  pony_fm = ("username", "password")
+except ImportError:
+	secret_logins = None
 
 def main(argv):
 	if argv is None:
@@ -23,15 +27,12 @@ def main(argv):
 	if not url:
 		print("no url given.")
 		sys.exit(0)
-	ponyfm = PonyFM(username=secret_logins.pony_fm[0], password=secret_logins.pony_fm[1])
-	ponyfm.get_token()
-	song_id = can_load(url)
-	if song_id:
-		file = download_song(song_id, cover_as_file=True)
-		open_file_folder(file)
-		print(file)
+	if secret_logins:
+		ponyfm = PonyFM(username=secret_logins.pony_fm[0], password=secret_logins.pony_fm[1])
 	else:
-		print("Not valid url.")
+		ponyfm = PonyFM
+	do_complete_load(ponyfm, url, cover_as_file=True)
+
 
 if __name__ == "__main__":
 	main(None)

@@ -1,6 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+secret_logins.py
+secret_logins.pyc
 
 # C extensions
 *.so

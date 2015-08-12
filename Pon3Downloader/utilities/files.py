@@ -43,7 +43,7 @@ def get_json(url, objectify=True, **kwargs):
 	return json
 
 
-def download_file(url, used_cached=True, temp_dir=None, return_mime=False, return_buffer=False, **requests_kwargs):
+def download_file(url, used_cached=True, temp_dir=None, return_mime=False, return_buffer=False, progress_bar=False, **requests_kwargs):
 	"""
 
 	:param url:

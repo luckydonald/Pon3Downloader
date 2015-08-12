@@ -8,9 +8,10 @@ from DictObject.encoding import to_unicode as u
 from DictObject.encoding import to_binary as b
 from DictObject.encoding import to_native as n
 import eyed3
-import re, os
-from ...utilities.files import download_file, get_json, do_a_filename, guess_extension
-from ...utilities.tagging import overwrite_if_not
+import os
+from Pon3Downloader.utilities.files import download_file, get_json, do_a_filename, guess_extension
+from Pon3Downloader.utilities.tagging import overwrite_if_not
+from Pon3Downloader.utilities import Plugin
 
 import re
 import requests
@@ -24,11 +25,22 @@ URL_REGEX = re.compile("^(?:https?://)?pony\.fm/((?:api/web/)?(?:tracks/)|t)(?P<
 API_URL = "https://pony.fm/api/web/tracks/{songid}?log=false"
 
 
-class PonyFM(object):
+class PonyFM(Plugin):
+	@classmethod
+	def can_load(self, url):
+		m =URL_REGEX.match(url)
+		if m:
+			song_id = m.group("songid")
+			logger.info("found song {id}".format(id=song_id))
+			return song_id
+		else:
+			return None
+
+	@classmethod
 	def download_song(self, song_id, requested_type="mp3", cover_as_file=False):
 			### Prepare/Get Meta ###
 			requested_type = u(requested_type)
-			if self and self.session:
+			if self and isinstance(self, PonyFM) and self.session:
 				json = get_json(API_URL.format(songid=song_id), cookies=self.session.cookies)
 			else:
 				json = get_json(API_URL.format(songid=song_id))
@@ -65,7 +77,7 @@ class PonyFM(object):
 				#end for-else
 			#end if
 			assert(download_src is not None)
-			if self and self.session:
+			if self and isinstance(self, PonyFM) and self.session:
 				file_path, file_mime = download_file(download_src, return_mime=True, cookies=self.session.cookies)
 			else:
 				file_path, file_mime = download_file(download_src, return_mime=True)
@@ -104,12 +116,11 @@ class PonyFM(object):
 			audiofile.tag.save()
 
 			### COVER ART ###
-			if self and self.session:
+			if self and isinstance(self, PonyFM) and self.session:
 				imageData, imageMine = download_file(json.track.covers.normal, return_mime=True, return_buffer=True, cookies=self.session.cookies)
 			else:
 				imageData, imageMine = download_file(json.track.covers.normal, return_mime=True, return_buffer=True)
 			imageType = eyed3.id3.frames.ImageFrame.FRONT_COVER
-			imageType = eyed3.id3.frames.ImageFrame
 			frame = audiofile.tag.images.set(imageType, imageData, b(imageMine))
 			frame.description = u('image from pony.fm')
 
@@ -133,12 +144,13 @@ class PonyFM(object):
 					cover_file.write(imageData)
 
 			### FAVE ###
-			if json.json.track.user_data:
-				logger.debug("User is logged in.")
+			if json.track.user_data:
 				if json.track.user_data.is_favourited == 0:
-					if self and self.session and self.token:
+					if self and isinstance(self, PonyFM) and self.session and self.token:
 						logger.debug("Favouriting it now.")
 						self.toggle_fave(json.track.id)
+					else:
+						logger.debug("User is not logged in.")
 				else:
 					logger.info("Song already is favorite.")
 			return music_file_path
