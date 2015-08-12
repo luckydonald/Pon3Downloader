@@ -6,7 +6,7 @@ but also adds the lyrics and cover art, which are rarely in the downloaded mp3 f
 
 ----
 
-Currently only supports pony.fm!
+Currently only supports pony.fm, and Equestrian Beats will probably not be implemented, as it is shutting down end of the year...  :(
 
 
 #### Dependencies 
@@ -24,7 +24,6 @@ Use from command line, launch ```Pon3Downloader/__init__.py``` with python 2
 
 
 #### Todo
-- Add Equestrian Beats (Eqbeats.org) is not yet implemented
+- Add Equestrian Beats (Eqbeats.org) is not yet implemented - also it will sadly shut down December :(
 - Install script is missing for more pleasant usage as module
-- Don't overwrite existing ID3 tags (only the missing ones)
 - Pony.fm is working fine
