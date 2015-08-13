@@ -1,29 +1,45 @@
 # Pon3Downloader
-Downloads pony related music from [Pony.fm](https://pony.fm/) and [Equestrian Beats](https://eqbeats.org),
-filling in all the ID3 meta tags,
-like artist name, album title, genre, etc. (all the standard things)
-but also adds the lyrics and cover art, which are rarely in the downloaded mp3 file.
+Downloads pony related music from [Pony.fm](https://pony.fm/),
+filling in all missing tags ID3 meta tags (like song title, album name, genre, etc.)
+but also adds the advanced tags like lyrics and cover art, which are rarely found in the downloaded mp3 files.
 
 ----
 
-Currently only supports pony.fm, and Equestrian Beats will probably not be implemented, as it is shutting down end of the year...  :(
+Currently Supports pony.fm
+### Install
+```
+pip install pon3downloader
+```
+    
+If you prefer to install it manually from source, grab the code and run:    
+```
+python setup.py install
+```
+
+#### Usage
+```
+python -m Pon3Downloader
+```
+You can use you pony.fm (poniverse.net) login to update your personal stats, and advanced features like automatic fave'ing and/or automatic comments when downloading.
+To not have to type your login credentials, you can stay logged-in, or store your login-password-combination.
 
 
 #### Dependencies 
-(install with pip)
+(installed automatically when installing using ```pip``` or ```setup.py```)
 - ```DictObject```
+- ```luckydonald-utils```
 - ```requests```
 - ```eyeD3```
 - ```python-magic```
 
 Needs python 2 (sadly, until ```eyeD3``` is upgraded to support Python 3, too)
 
-#### Usage
-Use from command line, launch ```Pon3Downloader/__init__.py``` with python 2
-(later this will be ```python -m Pon3Downloader``` or something easy to use)
-
-
 #### Todo
-- Add Equestrian Beats (Eqbeats.org) is not yet implemented - also it will sadly shut down December :(
-- Install script is missing for more pleasant usage as module
-- Pony.fm is working fine
+- Add Equestrian Beats [eqbeats.org](https://eqbeats.org) - not yet implemented. It will sadly shut down December :(
+- Add tests
+
+#### Notes
+Of course your password will be stored encrypted, but with access to your computer, it is decryptable.    
+I am working on a keychain solution so the en-/decryption key is safe too. (maybe 1Password, Apple Keychain, or some linux built-in? Does Windows have something similar?)
+
+[Equestrian Beats](https://eqbeats.org) will probably not be implemented, as it is shutting down end of the year...  :(

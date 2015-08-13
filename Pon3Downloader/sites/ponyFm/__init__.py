@@ -6,13 +6,14 @@ logger = logging.getLogger(__name__)
 
 from DictObject.encoding import to_unicode as u
 from DictObject.encoding import to_binary as b
-from DictObject.encoding import to_native as n
 import eyed3
 import os
-from Pon3Downloader.utilities.files import download_file, get_json, do_a_filename, guess_extension
-from Pon3Downloader.utilities.tagging import overwrite_if_not
-from Pon3Downloader.utilities.store import Store
+from luckydonaldUtils.download import download_file, get_json
+from luckydonaldUtils.files import do_a_filename, guess_extension
 from Pon3Downloader.utilities import Plugin
+from Pon3Downloader.utilities.tagging import overwrite_if_not
+from luckydonaldUtils.store import Store
+from Pon3Downloader import IDENTIFIER
 
 import re
 import requests
@@ -188,7 +189,7 @@ class PonyFM(Plugin):
 		token = BeautifulSoup(r.text).findAll(attrs={'name' : '_token'})[0].get('value').encode()
 		payload = {'_token' : token,
 				   'username' : self.username,
-				   'password' : Store(self.__key).decrypt(self.__password),
+				   'password' : Store(IDENTIFIER, self.__key).decrypt(self.__password),
 				   'checkbox' : '1',
 				   'submit' : '',
 				   }
@@ -197,9 +198,9 @@ class PonyFM(Plugin):
 		if r.url == pony_fm_url: # XXX
 			logger.info("Logged in")
 		else:
-			from ...utilities.interactions import confirm
+			from luckydonaldUtils.interactions import confirm
 			if confirm("Login failed. Reset password?", default=True):
-				from ...utilities.store import settings
+				from ...utilities.settings import settings
 				settings.ponyfm_user = ""
 				settings.ponyfm_pass = ""
 				settings.save_settings()

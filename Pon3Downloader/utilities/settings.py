@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 __author__ = 'luckydonald'
 
+
+from luckydonaldUtils.store import random
+from Pon3Downloader import IDENTIFIER
+
 import logging
+
 logger = logging.getLogger(__name__)
 
-VERSION = "0.0.4"
-IDENTIFIER = "de.luckydonald.pon3downloader"
 
-
-from usersettings import Settings
-from luckydonaldUtils.store import random
-
+from usersettings import Settings # pip install usersettings
 settings = Settings(IDENTIFIER)  # store settings, password etc.
 settings.add_setting("ponyfm_user", str, "")
 settings.add_setting("ponyfm_pass", str, "")

@@ -7,9 +7,12 @@ logging.basicConfig(level=logging.DEBUG)
 
 import sys  # launch arguments
 from Pon3Downloader.sites.ponyFm import PonyFM
-from Pon3Downloader.utilities.interactions import input, answer, confirm
-from Pon3Downloader.utilities.store import Store, settings
+from luckydonaldUtils.interactions import input, answer, confirm
+from luckydonaldUtils.store import Store
+from luckydonaldUtils.files import open_file_folder
+from Pon3Downloader.utilities.settings import settings
 from Pon3Downloader.utilities import do_complete_load_if_matches
+from Pon3Downloader import IDENTIFIER
 
 
 def main(argv):
@@ -38,7 +41,7 @@ def main(argv):
 		else:
 			username = settings.get("ponyfm_user")
 		#end if
-		store = Store()
+		store = Store(IDENTIFIER)
 		if "ponyfm_pass" not in settings or not settings.ponyfm_pass:
 			print("Password for pony.fm (If your shell can't hide the input, a warning will be displayed)")
 			__password = store.encrypt(getpass.getpass())
@@ -52,7 +55,9 @@ def main(argv):
 		ponyfm = PonyFM(username, password=__password, key=store.key)
 	else:
 		ponyfm = PonyFM
-	do_complete_load_if_matches(ponyfm, url, cover_as_file=True)
+	file = do_complete_load_if_matches(ponyfm, url, cover_as_file=True)
+	if confirm("Open file:", default=True):
+		open_file_folder(file)
 
 if __name__ == "__main__":
 	main(None)
