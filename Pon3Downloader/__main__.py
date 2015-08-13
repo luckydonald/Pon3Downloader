@@ -7,7 +7,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 import sys  # launch arguments
 from Pon3Downloader.sites.ponyFm import PonyFM
-from luckydonaldUtils.interactions import input, answer, confirm
+from luckydonaldUtils.interactions import answer, confirm
 from luckydonaldUtils.store import Store
 from luckydonaldUtils.files import open_file_folder
 from Pon3Downloader.utilities.settings import settings
@@ -22,7 +22,7 @@ def main(argv):
 	if argv:
 		url = argv[0]
 	else:
-		url = input("Url to download:")
+		url = answer("Url to download")
 	if not url:
 		print("no url given.")
 		sys.exit(0)
@@ -56,7 +56,7 @@ def main(argv):
 	else:
 		ponyfm = PonyFM
 	file = do_complete_load_if_matches(ponyfm, url, cover_as_file=True)
-	if confirm("Open file:", default=True):
+	if confirm("Open folder?", default=True):
 		open_file_folder(file)
 
 if __name__ == "__main__":

@@ -30,7 +30,7 @@ API_URL = "https://pony.fm/api/web/tracks/{songid}?log=false"
 class PonyFM(Plugin):
 	@classmethod
 	def can_load(self, url):
-		m =URL_REGEX.match(url)
+		m = URL_REGEX.match(url)
 		if m:
 			song_id = m.group("songid")
 			logger.info("found song {id}".format(id=song_id))
