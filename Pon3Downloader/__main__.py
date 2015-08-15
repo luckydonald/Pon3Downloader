@@ -26,12 +26,12 @@ def main(argv):
 	if not url:
 		print("no url given.")
 		sys.exit(0)
-	if "use_login" not in settings or not settings.use_login:
-		use_login = confirm("Use login with pony.fm command?\nYou can automatically fave and comment songs, and/or your download stats will be updated.", default=False)
+	if "use_login" not in settings or settings.use_login == -1:
+		use_login = 1 if confirm("Use login with pony.fm command?\nYou can automatically fave and comment songs, and/or your download stats will be updated.", default=False) else 0
 		settings.use_login = use_login
 		settings.save_settings()
 		logger.debug("Saved use_login.")
-	if settings.use_login:
+	if settings.use_login == 1:
 		if "ponyfm_user" not in settings or not settings.ponyfm_user:
 			default_username = getpass.getuser()
 			username = answer("Username for pony.fm (poniverse.net)", default=default_username)
