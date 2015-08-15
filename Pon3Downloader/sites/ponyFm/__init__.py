@@ -4,8 +4,8 @@ __author__ = 'luckydonald'
 import logging
 logger = logging.getLogger(__name__)
 
-from DictObject.encoding import to_unicode as u
-from DictObject.encoding import to_binary as b
+from luckydonaldUtils.encoding import to_unicode as u
+from luckydonaldUtils.encoding import to_binary as b
 import eyed3
 import os
 from luckydonaldUtils.download import download_file, get_json
@@ -17,13 +17,13 @@ from Pon3Downloader import IDENTIFIER
 
 import re
 import requests
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X10.69; rv:4458.42) Gecko/4458 Firefox/69.0 Pon3Downloader'}
 TOKEN_REGEX = re.compile('token:\s*"(?P<token>[a-zA-Z0-9]+)"')
 
 
 
-URL_REGEX = re.compile("^(?:https?://)?pony\.fm/((?:api/web/)?(?:tracks/)|t)(?P<songid>\d+)")#https://regex101.com/r/uV7qO6/2
+URL_REGEX = re.compile("^(?:https?://)?pony\.fm/(www\.)?((?:api/web/)?(?:tracks/)|t)(?P<songid>\d+)")  # https://regex101.com/r/uV7qO6
 API_URL = "https://pony.fm/api/web/tracks/{songid}?log=false"
 
 
@@ -80,9 +80,9 @@ class PonyFM(Plugin):
 			#end if
 			assert(download_src is not None)
 			if self and isinstance(self, PonyFM) and self.session:
-				file_path, file_mime = download_file(download_src, return_mime=True, cookies=self.session.cookies)
+				file_path, file_mime = download_file(download_src, return_mime=True, progress_bar=True, cookies=self.session.cookies)
 			else:
-				file_path, file_mime = download_file(download_src, return_mime=True)
+				file_path, file_mime = download_file(download_src, return_mime=True, progress_bar=True)
 			logger.info("Downloaded mp3 from '{url}' to '{path}'".format(url=download_src, path=file_path))
 
 			if u(file_mime) not in [u("audio/mp3"),u("audio/mpeg")]:
@@ -106,26 +106,22 @@ class PonyFM(Plugin):
 			overwrite_if_not(audiofile.tag, "genre", u(json.track.genre.name))
 			overwrite_if_not(audiofile.tag, "lyrics", [u(json.track.lyrics)])
 			overwrite_if_not(audiofile.tag, "audio_source_url", u(json.track.url))
-			if audiofile.tag.comments.get(u""):
-				text = audiofile.tag.comments.get(u"").text
-				text += u("\n-----\nDownloaded from https://pony.fm/ with Pon3Downloader (https://github.com/luckydonald/pon3downloader/).")
-				audiofile.tag.comments.set(text)
-			else:
-				audiofile.tag.comments.set(u("Downloaded from https://pony.fm/ with Pon3Downloader (https://github.com/luckydonald/pon3downloader/)"))
-			audiofile.tag.comments.set(u("https://github.com/luckydonald/pon3downloader"), u("Download"))
+			#if audiofile.tag.comments.get(u""):
+			#	text = audiofile.tag.comments.get(u"").text
+			#	text += u("\n-----\nDownloaded from https://pony.fm/ with Pon3Downloader (https://github.com/luckydonald/pon3downloader/).")
+			#	audiofile.tag.comments.set(text)
+			#else:
+			audiofile.tag.comments.set(u("Downloaded from {track_url} with Pon3Downloader (https://github.com/luckydonald/pon3downloader/)".format(track_url = json.track.url)))
 			audiofile.tag.comments.set(u("https://github.com/luckydonald/pon3downloader"), u("Downloader"))
-			audiofile.tag.comments.set(u("https://pony.fm/"), u("Origin"))
 			audiofile.tag.save()
 
 			### COVER ART ###
 			if self and isinstance(self, PonyFM) and self.session:
-				imageData, imageMine = download_file(json.track.covers.normal, return_mime=True, return_buffer=True, cookies=self.session.cookies)
+				imageData, imageMine = download_file(json.track.covers.normal, return_mime=True, return_buffer=True, progress_bar=True, cookies=self.session.cookies)
 			else:
-				imageData, imageMine = download_file(json.track.covers.normal, return_mime=True, return_buffer=True)
+				imageData, imageMine = download_file(json.track.covers.normal, return_mime=True, return_buffer=True, progress_bar=True)
 			imageType = eyed3.id3.frames.ImageFrame.FRONT_COVER
-			frame = audiofile.tag.images.set(imageType, imageData, b(imageMine))
-			frame.description = u('image from pony.fm')
-
+			audiofile.tag.images.set(imageType, imageData, b(imageMine), description=u(" "))
 			### SAVE ###
 
 			audiofile.tag.save()
@@ -227,7 +223,7 @@ class PonyFM(Plugin):
 			self.login()
 		if not self.token:
 			self.get_token()
-		payload = {"type":"track","id":str(song_id) ,"_token": self.token}
+		payload = {"type": "track", "id":str(song_id), "_token": self.token}
 		r = self.session.post("https://pony.fm/api/web/favourites/toggle", data=payload, headers=HEADERS, verify=False, allow_redirects=True, cookies=self.session.cookies)
 		return r
 
@@ -244,6 +240,7 @@ def tests():
 	# TODO: Tests.
 	# "https://pony.fm/tracks/2795-vinylz-eq-paradise" -> steam only
 	# "https://pony.fm/tracks/2794-applejack-too-soon" -> mp3 DL
+	# "https://pony.fm/i1728/normal.png" cover art url -> https://pony.fm/tracks/2736-sign-in-color-ponies-shying-from-dragons
 
 	# "https://pony.fm/api/web/comments/track/2802": POST {"content":"Finally something so refreshingly different, but still Rainbow factory. Even if I really dislike Rainbow Factory (hate, even?), this song made it to my music collection on my hard drive. Awesome song!","_token":"3kYFkvHSVHHQTCnoZ1XtfITRVUO7eFvt7Bb4ouxT"}
 	pass

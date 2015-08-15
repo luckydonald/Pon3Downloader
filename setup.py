@@ -11,23 +11,31 @@ long_description = """Downloads Music from pony.fm and eqbeat.org, filling in al
 
 setup(
 	name="pon3downloader",
-	packages=['luckydonaldUtils'],
-	version="0.2",
+	packages=['Pon3Downloader'],
+	version="0.3",
 	author="luckydonald",
 	author_email="code@luckydonald.de",
 	description=long_description,
-	license="BSD",
+	license="GPLv3+",
 	keywords="download, music, ponies, DJ Pon3, pony.fm, eqbeats.org, Equestrian Beats, mp3, cover art images, "
 			 "lyrics, ID3, pony, littlepip is best pony",
 	url="https://github.com/luckydonald/pon3downloader/",
-	install_requires=["DictObject", "requests", "eyeD3", "python-magic", "luckydonald-utils", 'usersettings', 'BeautifulSoup'],
+	install_requires=["DictObject", "requests", "eyeD3", "python-magic", "luckydonald-utils", 'usersettings',
+					  'beautifulsoup4'],
 	long_description=long_description,
 	classifiers=[
 		"Development Status :: 4 - Beta",
-		"Intended Audience :: Developers",
+		"Intended Audience :: End Users/Desktop",
 		"Topic :: Utilities",
+		"Topic :: Internet",
+		"Topic :: Internet :: WWW/HTTP",
+		"Topic :: Multimedia",
+		"Topic :: Multimedia :: Sound/Audio",
+		"Topic :: Multimedia :: Sound/Audio :: Capture/Recording",
+		"Topic :: System :: Archiving",
+		"Programming Language :: Python",
+		"Programming Language :: Python :: 2",
+		"Programming Language :: Python :: 2.7",
 		"License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
 	],
 )
-
-

@@ -7,7 +7,7 @@ but also adds the advanced tags like lyrics and cover art, which are rarely foun
 
 Currently Supports pony.fm
 ### Install
-```
+```sh
 pip install pon3downloader
 ```
     
@@ -17,22 +17,25 @@ python setup.py install
 ```
 
 #### Usage
-```
-python -m Pon3Downloader
+```sh
+# start to enter url interactively:    
+python -m Pon3Downloader    
+# supply an url directly:    
+python -m Pon3Downloader <url>    
 ```
 You can use you pony.fm (poniverse.net) login to update your personal stats, and advanced features like automatic fave'ing and/or automatic comments when downloading.
 To not have to type your login credentials, you can stay logged-in, or store your login-password-combination.
 
 
 #### Dependencies 
-(installed automatically when installing using ```pip``` or ```setup.py```)
-- ```DictObject```
-- ```luckydonald-utils```
-- ```requests```
-- ```eyeD3```
-- ```python-magic```
+(installed automatically when installing using ```pip``` or ```setup.py```)    
+- ```DictObject```    
+- [```luckydonald-utils```](https://github.com/luckydonald/python-utils/)    
+- ```requests```    
+- ```eyeD3```    
+- ```python-magic```    
 
-Needs python 2 (sadly, until ```eyeD3``` is upgraded to support Python 3, too)
+Needs Python 2 (sadly, until ```eyeD3``` is upgraded to support Python 3, too)
 
 #### Todo
 - Add Equestrian Beats [eqbeats.org](https://eqbeats.org) - not yet implemented. It will sadly shut down December :(
@@ -42,4 +45,4 @@ Needs python 2 (sadly, until ```eyeD3``` is upgraded to support Python 3, too)
 Of course your password will be stored encrypted, but with access to your computer, it is decryptable.    
 I am working on a keychain solution so the en-/decryption key is safe too. (maybe 1Password, Apple Keychain, or some linux built-in? Does Windows have something similar?)
 
-[Equestrian Beats](https://eqbeats.org) will probably not be implemented, as it is shutting down end of the year...  :(
+[Equestrian Beats](https://eqbeats.org) will probably not be implemented, as they are  shutting down end of the year...  :(
