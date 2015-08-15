@@ -2,6 +2,7 @@
 __author__ = 'luckydonald'
 
 from setuptools import setup
+from Pon3Downloader import VERSION
 
 long_description = """Downloads Music from pony.fm and eqbeat.org, filling in all the advanced ID3 meta tags, like lyrics and cover art."""
 
@@ -12,7 +13,7 @@ long_description = """Downloads Music from pony.fm and eqbeat.org, filling in al
 setup(
 	name="pon3downloader",
 	packages=['Pon3Downloader'],
-	version="0.3",
+	version=VERSION,
 	author="luckydonald",
 	author_email="code@luckydonald.de",
 	description=long_description,
