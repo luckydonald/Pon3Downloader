@@ -10,9 +10,8 @@ import sys  # launch arguments
 from luckydonaldUtils.interactions import answer, confirm
 from luckydonaldUtils.store import Store
 from luckydonaldUtils.files import open_file_folder
-#from Putilities.settings
-#settings = settings.settings
 from Pon3Downloader.sites.ponyFm import PonyFM
+from Pon3Downloader.utilities.settings import settings
 from Pon3Downloader.utilities.stuff import do_complete_load_if_matches
 from Pon3Downloader import IDENTIFIER
 

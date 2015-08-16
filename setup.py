@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
 __author__ = 'luckydonald'
 
-from setuptools import setup
+from setuptools import setup, find_packages
 from Pon3Downloader import VERSION
 
 long_description = """Downloads Music from pony.fm and eqbeat.org, filling in all the advanced ID3 meta tags, like lyrics and cover art."""
-
+main_package = 'Pon3Downloader'
+packages = [main_package, 'pon3down']
+for package in find_packages(where='Pon3Downloader'):
+	packages.append(main_package + "." + package)
 # http://peterdowns.com/posts/first-time-with-pypi.html
 # $ python setup.py register -r pypi
 # $ python setup.py sdist upload -r pypi
 
 setup(
 	name="pon3downloader",
-	packages=['Pon3Downloader','pon3down'],
+	packages=packages,
 	version=VERSION,
 	author="luckydonald",
 	author_email="code@luckydonald.de",
@@ -42,6 +45,6 @@ setup(
 	entry_points={
     'console_scripts': [
 		'pon3music = Pon3Downloader.main:main',
-		'pon3down = pon3down:main',
+		'pon3down = pon3down.main:main',
 	]},
 )
