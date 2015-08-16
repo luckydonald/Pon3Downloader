@@ -10,10 +10,10 @@ import eyed3
 import os
 from luckydonaldUtils.download import download_file, get_json
 from luckydonaldUtils.files import do_a_filename, guess_extension
-from Pon3Downloader.utilities import Plugin
-from Pon3Downloader.utilities.tagging import overwrite_if_not
+from ...utilities.stuff import Plugin
+from ...utilities.tagging import overwrite_if_not
 from luckydonaldUtils.store import Store
-from Pon3Downloader import IDENTIFIER
+from ... import IDENTIFIER
 
 import re
 import requests

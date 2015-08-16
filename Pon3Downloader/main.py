@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 __author__ = 'luckydonald'
 
 import logging
@@ -6,12 +7,13 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 import sys  # launch arguments
-from Pon3Downloader.sites.ponyFm import PonyFM
 from luckydonaldUtils.interactions import answer, confirm
 from luckydonaldUtils.store import Store
 from luckydonaldUtils.files import open_file_folder
-from Pon3Downloader.utilities.settings import settings
-from Pon3Downloader.utilities import do_complete_load_if_matches
+#from Putilities.settings
+#settings = settings.settings
+from Pon3Downloader.sites.ponyFm import PonyFM
+from Pon3Downloader.utilities.stuff import do_complete_load_if_matches
 from Pon3Downloader import IDENTIFIER
 
 

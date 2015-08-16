@@ -3,7 +3,7 @@ __author__ = 'luckydonald'
 
 
 from luckydonaldUtils.store import random
-from Pon3Downloader import IDENTIFIER
+from .. import IDENTIFIER
 
 import logging
 

@@ -12,7 +12,7 @@ long_description = """Downloads Music from pony.fm and eqbeat.org, filling in al
 
 setup(
 	name="pon3downloader",
-	packages=['Pon3Downloader'],
+	packages=['Pon3Downloader','pon3down'],
 	version=VERSION,
 	author="luckydonald",
 	author_email="code@luckydonald.de",
@@ -39,4 +39,9 @@ setup(
 		"Programming Language :: Python :: 2.7",
 		"License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
 	],
+	entry_points={
+    'console_scripts': [
+		'pon3music = Pon3Downloader.main:main',
+		'pon3down = pon3down:main',
+	]},
 )
