@@ -6,8 +6,8 @@ from Pon3Downloader import VERSION
 
 long_description = """Downloads Music from pony.fm and eqbeat.org, filling in all the advanced ID3 meta tags, like lyrics and cover art."""
 main_package = 'Pon3Downloader'
-packages = [main_package, 'pon3down']
-for package in find_packages(where='Pon3Downloader'):
+packages = [main_package]
+for package in find_packages(where=main_package):
 	packages.append(main_package + "." + package)
 # http://peterdowns.com/posts/first-time-with-pypi.html
 # $ python setup.py register -r pypi
@@ -44,7 +44,6 @@ setup(
 	],
 	entry_points={
     'console_scripts': [
-		'pon3music = Pon3Downloader.main:main',
-		'pon3down = pon3down.main:main',
+		'pon3dl = Pon3Downloader.__main__:main',
 	]},
 )
