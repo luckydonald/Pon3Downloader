@@ -13,10 +13,11 @@ from luckydonaldUtils.files import do_a_filename, guess_extension
 from ...utilities.stuff import Plugin
 from ...utilities.tagging import overwrite_if_not
 from luckydonaldUtils.store import Store
-from ... import IDENTIFIER
+from ... import IDENTIFIER, SHORT_NAME
 
 import re
 import requests
+requests.packages.urllib3.disable_warnings()
 from bs4 import BeautifulSoup
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X10.69; rv:4458.42) Gecko/4458 Firefox/69.0 Pon3Downloader'}
 TOKEN_REGEX = re.compile('token:\s*"(?P<token>[a-zA-Z0-9]+)"')
@@ -43,9 +44,9 @@ class PonyFM(Plugin):
 			### Prepare/Get Meta ###
 			requested_type = u(requested_type)
 			if self and isinstance(self, PonyFM) and self.session:
-				json = get_json(API_URL.format(songid=song_id), cookies=self.session.cookies)
+				json = get_json(API_URL.format(songid=song_id), cookies=self.session.cookies, verify=False)
 			else:
-				json = get_json(API_URL.format(songid=song_id))
+				json = get_json(API_URL.format(songid=song_id), verify=False)
 
 
 			### FILE Download ###
@@ -79,16 +80,20 @@ class PonyFM(Plugin):
 				#end for-else
 			#end if
 			assert(download_src is not None)
+
+			# Got download link.
+			# Now Download song.
+
 			if self and isinstance(self, PonyFM) and self.session:
-				file_path, file_mime = download_file(download_src, return_mime=True, progress_bar=True, cookies=self.session.cookies)
+				file_path, file_mime = download_file(download_src, temp_folder_name=SHORT_NAME, return_mime=True, progress_bar=True, cookies=self.session.cookies, verify=False)
 			else:
-				file_path, file_mime = download_file(download_src, return_mime=True, progress_bar=True)
+				file_path, file_mime = download_file(download_src, temp_folder_name=SHORT_NAME, return_mime=True, progress_bar=True, verify=False)
 			logger.info("Downloaded mp3 from '{url}' to '{path}'".format(url=download_src, path=file_path))
 
 			if u(file_mime) not in [u("audio/mp3"),u("audio/mpeg")]:
 				raise AssertionError("mp3 is not mp3..")  # TODO: custom exception
 			else:
-				extension = "mp3"
+				extension = "mp3"  # very dynamic, such future-prove!
 
 			### META ###
 
@@ -117,9 +122,9 @@ class PonyFM(Plugin):
 
 			### COVER ART ###
 			if self and isinstance(self, PonyFM) and self.session:
-				imageData, imageMine = download_file(json.track.covers.normal, return_mime=True, return_buffer=True, progress_bar=True, cookies=self.session.cookies)
+				imageData, imageMine = download_file(json.track.covers.normal, return_mime=True, return_buffer=True, progress_bar=True, cookies=self.session.cookies, verify=False)
 			else:
-				imageData, imageMine = download_file(json.track.covers.normal, return_mime=True, return_buffer=True, progress_bar=True)
+				imageData, imageMine = download_file(json.track.covers.normal, return_mime=True, return_buffer=True, progress_bar=True, verify=False)
 			imageType = eyed3.id3.frames.ImageFrame.FRONT_COVER
 			audiofile.tag.images.set(imageType, imageData, b(imageMine), description=u(" "))
 			### SAVE ###
@@ -182,7 +187,7 @@ class PonyFM(Plugin):
 
 		r = session.get(poniverse_ponyfm_url, headers=HEADERS, verify=False)
 		assert (r.url == poniverse_start)
-		token = BeautifulSoup(r.text).findAll(attrs={'name' : '_token'})[0].get('value').encode()
+		token = BeautifulSoup(r.text, "html.parser").findAll(attrs={'name' : '_token'})[0].get('value').encode()
 		payload = {'_token' : token,
 				   'username' : self.username,
 				   'password' : Store(IDENTIFIER, self.__key).decrypt(self.__password),
@@ -210,7 +215,7 @@ class PonyFM(Plugin):
 		if not self.session:
 			self.login()
 		r = self.session.get('https://pony.fm', headers=HEADERS, verify=False, allow_redirects=True, cookies=self.session.cookies)
-		bs = BeautifulSoup(r.text)
+		bs = BeautifulSoup(r.text, "html.parser")
 		script = [script for script in bs.findAll("script") if "token" in script.text][0]
 		m = TOKEN_REGEX.search(str(script))
 		if m:
