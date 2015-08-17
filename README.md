@@ -18,10 +18,13 @@ python setup.py install
 
 #### Usage
 ```sh
-# start to enter url interactively:    
-python -m Pon3Downloader    
+# launch to enter a url interactively:    
+pon3dl
+# or via module name (backwards compatibility)
+python -m Pon3Downloader
+
 # supply an url directly:    
-python -m Pon3Downloader <url>    
+pon3dl <url>    
 ```
 You can use you pony.fm (poniverse.net) login to update your personal stats, and advanced features like automatic fave'ing and/or automatic comments when downloading.
 To not have to type your login credentials, you can stay logged-in, or store your login-password-combination.
