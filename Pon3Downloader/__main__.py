@@ -4,7 +4,7 @@ __author__ = 'luckydonald'
 
 import logging
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 
 import sys  # launch arguments
 from luckydonaldUtils.interactions import answer, confirm
@@ -16,7 +16,7 @@ from Pon3Downloader.utilities.stuff import do_complete_load_if_matches
 from Pon3Downloader import IDENTIFIER
 
 
-def main(argv):
+def main(argv=None):
 	import getpass
 	if argv is None:
 		argv = sys.argv[1:]  # argv[0] is program name
@@ -57,6 +57,7 @@ def main(argv):
 	else:
 		ponyfm = PonyFM
 	file = do_complete_load_if_matches(ponyfm, url, cover_as_file=True)
+	print("File written to {path}".format(path=file))
 	if confirm("Open folder?", default=True):
 		open_file_folder(file)
 
